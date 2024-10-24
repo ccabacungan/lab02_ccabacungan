@@ -145,16 +145,11 @@ IntBST::Node* IntBST::getNodeFor(int value, Node* n) const {
     
     if (value == n->info) {
         return n;
-    }
-    if (value < n->info) {
+    } else if (value < n->info) {
         return getNodeFor(value, n->left);
-    }
-
-    if (value > n->info) {
+    } else {
         return getNodeFor(value, n->right);
     }
-
-    return nullptr;
 }
 
 // returns true if value is in the tree; false if not
@@ -243,6 +238,8 @@ int IntBST::getSuccessor(int value) const{
 // returns true if the node exist and was deleted or false if the node does not exist
 bool IntBST::remove(int value) {
     Node* removal = getNodeFor(value, root);
+
+    return false;
     if (removal == nullptr) {
         return false; 
     }
@@ -283,9 +280,10 @@ bool IntBST::remove(int value) {
     // Two children
     else {
         Node* successorNode = getSuccessorNode(value);
-        removal->info = successorNode->info; 
+        int a = successorNode->info;
         remove(successorNode->info);
-        return true; // 
+        removal->info = a; 
+        return true;
     }
 
     delete removal; 
