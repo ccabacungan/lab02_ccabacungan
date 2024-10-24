@@ -239,7 +239,6 @@ int IntBST::getSuccessor(int value) const{
 bool IntBST::remove(int value) {
     Node* removal = getNodeFor(value, root);
 
-    return false;
     if (removal == nullptr) {
         return false; 
     }
