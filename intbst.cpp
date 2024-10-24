@@ -19,7 +19,7 @@ IntBST::~IntBST() {
 
 // recursive helper for destructor
 void IntBST::clear(Node *n) {
-    if (root = nullptr) {
+    if (n == nullptr) {
         return;
     }
     // Recursively delete all nodes
