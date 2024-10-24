@@ -171,7 +171,7 @@ bool IntBST::contains(int value) const {
 
 
 // returns the Node containing the predecessor of the given value
-IntBST::Node* IntBST::getPredecessorNode(int value) const {
+Node* IntBST::getPredecessorNode(int value) const {
    Node* node = getNodeFor(value, root);
     if (node == nullptr) {
         return nullptr; 
@@ -206,7 +206,7 @@ int IntBST::getPredecessor(int value) const {
 }
 
 // returns the Node containing the successor of the given value
-IntBST::Node* IntBST::getSuccessorNode(int value) const {
+Node* IntBST::getSuccessorNode(int value) const {
         Node* node = getNodeFor(value, root);
         if (node == nullptr) {
             return nullptr; // Value not found
