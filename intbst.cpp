@@ -1,7 +1,6 @@
 // intbst.cpp
 // Implements class IntBST
 // YOUR NAME(S), DATE
-// tests
 
 #include "intbst.h"
 
@@ -41,29 +40,32 @@ bool IntBST::insert(int value) {
 
 // recursive helper for insert (assumes n is never 0)
 bool IntBST::insert(int value, Node *n) {
-    // Left
+    if (n->info == value) {
+        return false;
+    }
+
     if (value < n->info) {
-        if (n->left == nullptr) { // empty
-            n->left = new Node(value); 
-            return true; 
-        } 
-        else {
-            return insert(value, n->left); 
+        if(!n->left) {
+            n->left = new Node(value);
+            n->left->parent = n;
+            return true;
         }
-    } 
-    // Right
-    else if (value > n->info) {
-        // Go right
-        if (n->right == nullptr) {
-            n->right = new Node(value); // empty
-            return true; 
-        } 
+        
         else {
-            return insert(value, n->right); 
+            return insert(value, n->left);
         }
     }
-    // Value already exists 
-    return false;
+
+    else {
+        if(!n-> right) {
+            n->right = new Node(value);
+            n->right->parent = n;
+            return true;
+        }
+        else {
+            return insert(value, n->right);
+        }
+    }
 }
     
 // print tree data pre-order
@@ -137,19 +139,22 @@ int IntBST::count(Node *n) const {
 // Whenever you call this method from somewhere else, pass it
 // the root node as "n"
 IntBST::Node* IntBST::getNodeFor(int value, Node* n) const {
-    if (n == nullptr) {
+    if (!n) {
         return nullptr;
     }
     
     if (value == n->info) {
         return n;
     }
-    else if (value < n->info) {
+    if (value < n->info) {
         return getNodeFor(value, n->left);
     }
-    else {
+
+    if (value > n->info) {
         return getNodeFor(value, n->right);
     }
+
+    return nullptr;
 }
 
 // returns true if value is in the tree; false if not
@@ -236,30 +241,25 @@ int IntBST::getSuccessor(int value) const{
 }
 // deletes the Node containing the given value from the tree
 // returns true if the node exist and was deleted or false if the node does not exist
-bool IntBST::remove(int value){
+bool IntBST::remove(int value) {
     Node* removal = getNodeFor(value, root);
     if (removal == nullptr) {
         return false; 
     }
 
-// No children
+    // No children 
     if (removal->left == nullptr && removal->right == nullptr) {
         if (removal->parent != nullptr) {
             if (removal == removal->parent->left) {
                 removal->parent->left = nullptr;
-            } 
-            else {
+            } else {
                 removal->parent->right = nullptr;
             }
-        } 
-        else {
-            root = nullptr; // Tree is now empty
+        } else {
+            root = nullptr; 
         }
-
-        delete removal;
     }
-
-// One child
+    // One child
     else if (removal->left == nullptr || removal->right == nullptr) {
         Node* child = (removal->left != nullptr) ? removal->left : removal->right;
         if (removal->parent != nullptr) {
@@ -270,21 +270,19 @@ bool IntBST::remove(int value){
                 removal->parent->right = child;
             }
         } 
-
         else {
             root = child; 
         }
-
         child->parent = removal->parent;
-        delete removal;
     }
-    
-// Two children
+    // Two children
     else {
         Node* successorNode = getSuccessorNode(value);
         removal->info = successorNode->info; 
-        remove(successorNode->info); 
+        remove(successorNode->info);
+        return true; // 
     }
 
-    return true; // Node was successfully deleted
+    delete removal; 
+    return true; 
 }
